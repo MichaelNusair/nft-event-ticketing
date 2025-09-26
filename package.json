@@ -1,0 +1,21 @@
+{
+  "name": "nft-event-ticketing",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nx build contracts",
+    "test": "nx test contracts",
+    "deploy": "nx deploy contracts",
+    "lint": "nx lint",
+    "graph": "nx graph",
+    "dev": "nx run-many --target=build --projects=contracts,shared"
+  },
+  "devDependencies": {
+    "@nx/js": "^21.5.3",
+    "@nx/workspace": "^21.5.3",
+    "nx": "21.5.3",
+    "typescript": "~5.8.0"
+  },
+  "dependencies": {}
+}
