@@ -1,0 +1,41 @@
+{
+  "name": "contracts",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": ".",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx hardhat compile",
+        "cwd": "packages/contracts"
+      },
+      "dependsOn": []
+    },
+    "deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx hardhat run scripts/deploy.js --network sepolia",
+        "cwd": "packages/contracts"
+      },
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx hardhat test",
+        "cwd": "packages/contracts"
+      },
+      "dependsOn": []
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx hardhat check",
+        "cwd": "packages/contracts"
+      },
+      "dependsOn": []
+    }
+  },
+  "tags": ["type:smart-contracts", "platform:hardhat"]
+}

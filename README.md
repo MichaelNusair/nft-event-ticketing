@@ -1,57 +1,100 @@
-# Sample Hardhat 3 Beta Project (`mocha` and `ethers`)
+# NFT Event Ticketing - Nx Monorepo
 
-This project showcases a Hardhat 3 Beta project using `mocha` for tests and the `ethers` library for Ethereum interactions.
+This is an Nx + pnpm monorepo for NFT event ticketing smart contracts and frontend applications.
 
-To learn more about the Hardhat 3 Beta, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3 Beta](https://hardhat.org/hardhat3-beta-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
+## Project Structure
 
-## Project Overview
-
-This example project includes:
-
-- A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using `mocha` and ethers.js
-- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
-
-## Usage
-
-### Running Tests
-
-To run all the tests in the project, execute the following command:
-
-```shell
-npx hardhat test
+```
+├── apps/                    # Frontend applications
+├── packages/
+│   ├── contracts/          # Hardhat smart contract project
+│   │   ├── contracts/      # Solidity contracts
+│   │   ├── scripts/        # Deployment and utility scripts
+│   │   ├── test/          # Contract tests
+│   │   ├── hardhat.config.ts
+│   │   └── project.json   # Nx project configuration
+│   └── shared/            # Shared TypeScript package
+│       ├── src/
+│       │   ├── abi/       # Generated contract ABIs
+│       │   └── constants/ # Contract addresses and constants
+│       ├── package.json
+│       └── project.json   # Nx project configuration
+├── pnpm-workspace.yaml    # pnpm workspace configuration
+└── nx.json               # Nx workspace configuration
 ```
 
-You can also selectively run the Solidity or `mocha` tests:
+## Getting Started
 
-```shell
-npx hardhat test solidity
-npx hardhat test mocha
+### Prerequisites
+
+- Node.js 22.10.0 or later
+- pnpm
+
+### Installation
+
+```bash
+pnpm install
 ```
 
-### Make a deployment to Sepolia
+### Available Commands
 
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
-
-To run the deployment to a local chain:
-
-```shell
-npx hardhat ignition deploy ignition/modules/Counter.ts
+#### Development
+```bash
+pnpm dev          # Build all packages
+pnpm nx graph     # View project dependency graph
 ```
 
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
-
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
-
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
-
-```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
+#### Contracts
+```bash
+pnpm build        # Compile contracts and generate ABIs
+pnpm test         # Run contract tests
+pnpm deploy       # Deploy to Sepolia network
 ```
 
-After setting the variable, you can run the deployment with the Sepolia network:
-
-```shell
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
+#### Individual Packages
+```bash
+pnpm nx build contracts    # Build contracts package
+pnpm nx test contracts     # Test contracts package
+pnpm nx build shared       # Build shared package
 ```
+
+## Usage in Frontend
+
+The frontend can import ABIs and constants from the shared package:
+
+```typescript
+import { TicketNFTABI } from '@nft-event-ticketing/shared/abi';
+import { CONTRACT_ADDRESSES, NETWORKS } from '@nft-event-ticketing/shared/constants';
+```
+
+## Configuration
+
+### Environment Variables
+
+Create a `.env` file in the root directory with:
+
+```bash
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_PROJECT_ID
+SEPOLIA_PRIVATE_KEY=your_private_key_here
+```
+
+### Adding New Contracts
+
+1. Add your Solidity contract to `packages/contracts/contracts/`
+2. Update the Hardhat config to copy artifacts to `packages/shared/src/abi/`
+3. Update `packages/shared/src/abi/index.ts` to export the new ABI
+4. Update `packages/shared/src/constants/index.ts` with the contract address
+
+## Development Workflow
+
+1. **Smart Contract Development**: Work in `packages/contracts/`
+2. **Build Process**: Run `pnpm build` to compile contracts and generate ABIs
+3. **Frontend Development**: Import from `@nft-event-ticketing/shared` in your frontend apps
+4. **Deployment**: Use `pnpm deploy` to deploy contracts to networks
+
+## Nx Benefits
+
+- **Fast builds**: Nx caches build artifacts and only rebuilds what's changed
+- **Dependency management**: Clear visibility of project dependencies
+- **Scalability**: Easy to add new packages and applications
+- **Remote caching**: Share build cache with your team (optional)
