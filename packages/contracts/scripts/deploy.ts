@@ -1,8 +1,5 @@
-import { ethers } from "hardhat";
-import { config } from "dotenv";
-
-// Load environment variables
-config();
+const { ethers } = require("hardhat");
+import "dotenv/config";
 
 async function main() {
   console.log("Deploying TicketNFT contract to Sepolia...");

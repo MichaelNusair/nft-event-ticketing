@@ -1,9 +1,8 @@
-import type { HardhatUserConfig } from "hardhat/config";
-import * as fs from "fs";
-import * as path from "path";
+// Load environment variables at the top
+require("dotenv").config();
 
-import { config } from "dotenv";
-config();
+const path = require("path");
+const fs = require("fs");
 
 // Function to copy artifacts to shared package
 function copyArtifactsToShared() {
@@ -55,7 +54,7 @@ export default ${contractName}ABI;
   }
 }
 
-const config: HardhatUserConfig = {
+const config = {
   solidity: {
     version: "0.8.28",
     settings: {
@@ -70,18 +69,14 @@ const config: HardhatUserConfig = {
       chainId: 1337,
     },
     sepolia: {
-      url:
-        process.env.SEPOLIA_RPC_URL ||
-        "https://sepolia.infura.io/v3/YOUR_PROJECT_ID",
-      accounts:
-        process.env.SEPOLIA_PRIVATE_KEY &&
+      url: process.env.SEPOLIA_RPC_URL || "https://sepolia.infura.io/v3/YOUR_PROJECT_ID",
+      accounts: process.env.SEPOLIA_PRIVATE_KEY &&
         process.env.SEPOLIA_PRIVATE_KEY !== "your_private_key_here" &&
-        process.env.SEPOLIA_PRIVATE_KEY !==
-          "your_actual_private_key_without_0x_prefix_here"
-          ? [process.env.SEPOLIA_PRIVATE_KEY]
-          : [],
+        process.env.SEPOLIA_PRIVATE_KEY !== "your_actual_private_key_without_0x_prefix_here"
+        ? [process.env.SEPOLIA_PRIVATE_KEY]
+        : [],
     },
   },
 };
 
-export default config;
+module.exports = config;
