@@ -7,8 +7,26 @@ config();
 async function main() {
   console.log("Deploying TicketNFT contract to Sepolia...");
 
+  // Check if environment variables are set
+  if (!process.env.SEPOLIA_RPC_URL || process.env.SEPOLIA_RPC_URL.includes("YOUR_INFURA_PROJECT_ID")) {
+    console.error("❌ SEPOLIA_RPC_URL is not set correctly in .env file");
+    console.error("Please update your .env file with your actual Infura project ID");
+    process.exit(1);
+  }
+
+  if (!process.env.SEPOLIA_PRIVATE_KEY || process.env.SEPOLIA_PRIVATE_KEY.includes("your_actual_private_key")) {
+    console.error("❌ SEPOLIA_PRIVATE_KEY is not set correctly in .env file");
+    console.error("Please update your .env file with your actual wallet private key");
+    process.exit(1);
+  }
+
   // Get the ContractFactory and Signers here
   const [deployer] = await ethers.getSigners();
+
+  if (!deployer) {
+    console.error("❌ No deployer account found. Please check your SEPOLIA_PRIVATE_KEY in .env file");
+    process.exit(1);
+  }
 
   console.log("Deploying contracts with the account:", deployer.address);
   console.log("Account balance:", (await deployer.provider.getBalance(deployer.address)).toString());

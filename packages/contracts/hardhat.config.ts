@@ -2,8 +2,8 @@ import type { HardhatUserConfig } from "hardhat/config";
 import * as fs from "fs";
 import * as path from "path";
 
-import hardhatToolboxMochaEthersPlugin from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
-import { configVariable } from "hardhat/config";
+import { config } from "dotenv";
+config();
 
 // Function to copy artifacts to shared package
 function copyArtifactsToShared() {
@@ -56,45 +56,32 @@ export default ${contractName}ABI;
 }
 
 const config: HardhatUserConfig = {
-  plugins: [hardhatToolboxMochaEthersPlugin],
   solidity: {
-    profiles: {
-      default: {
-        version: "0.8.28",
-      },
-      production: {
-        version: "0.8.28",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
-          },
-        },
+    version: "0.8.28",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
       },
     },
   },
   networks: {
-    hardhatMainnet: {
-      type: "edr-simulated",
-      chainType: "l1",
-    },
-    hardhatOp: {
-      type: "edr-simulated",
-      chainType: "op",
+    hardhat: {
+      chainId: 1337,
     },
     sepolia: {
-      type: "http",
-      chainType: "l1",
-      url: configVariable("SEPOLIA_RPC_URL"),
-      accounts: [configVariable("SEPOLIA_PRIVATE_KEY")],
+      url:
+        process.env.SEPOLIA_RPC_URL ||
+        "https://sepolia.infura.io/v3/YOUR_PROJECT_ID",
+      accounts:
+        process.env.SEPOLIA_PRIVATE_KEY &&
+        process.env.SEPOLIA_PRIVATE_KEY !== "your_private_key_here" &&
+        process.env.SEPOLIA_PRIVATE_KEY !==
+          "your_actual_private_key_without_0x_prefix_here"
+          ? [process.env.SEPOLIA_PRIVATE_KEY]
+          : [],
     },
   },
-};
-
-// Add post-compile hook to copy artifacts
-config.solidity = {
-  ...config.solidity,
-  onCompileComplete: copyArtifactsToShared,
 };
 
 export default config;

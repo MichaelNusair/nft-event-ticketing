@@ -1,5 +1,6 @@
 # Node modules
-node_modules
+/node_modules
+/**/**/node_modules
 
 # Compilation output
 /dist
@@ -8,7 +9,7 @@ node_modules
 /bundle
 
 # Hardhat Build Artifacts
-/artifacts
+/packages/contracts/artifacts
 
 # Hardhat compilation (v2) support directory
 /cache
